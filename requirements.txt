@@ -1,0 +1,4 @@
+slack_sdk
+pynvml
+simple-parsing
+pytest-asyncio

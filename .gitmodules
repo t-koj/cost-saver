@@ -1,0 +1,6 @@
+[submodule "ext/message-slack"]
+	path = ext/message-slack
+	url = https://github.com/t-koj/message-slack.git
+[submodule "ext/message_slack"]
+	path = ext/message_slack
+	url = https://github.com/t-koj/message_slack.git
