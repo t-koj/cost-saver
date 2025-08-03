@@ -14,4 +14,6 @@ async def main():
     await Watcher(Config.default(), dependency=dependency).loop()
 
 if __name__ == "__main__":
+    from dotenv import load_dotenv
+    load_dotenv()
     asyncio.run(main())
