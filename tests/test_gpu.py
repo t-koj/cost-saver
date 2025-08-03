@@ -5,7 +5,11 @@ from pynvml import NVMLError
 
 @pytest.fixture
 def gpu():
-    gpu_dependency = MagicMock(spec=GpuDependency)
+    gpu_dependency = GpuDependency()
+    gpu_dependency.init = MagicMock()
+    gpu_dependency.shutdown = MagicMock()
+    gpu_dependency.get_handle_by_index = MagicMock(return_value=MagicMock())
+    gpu_dependency.get_utilization_rates = MagicMock()
     gpu = Gpu(gpu_dependency)
     return gpu
 

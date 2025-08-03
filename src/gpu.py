@@ -1,3 +1,4 @@
+from typing import Any, Callable
 from pynvml import (
     nvmlInit, 
     nvmlShutdown,
@@ -7,10 +8,19 @@ from pynvml import (
 )
 
 class GpuDependency:
-    init = nvmlInit
-    shutdown = nvmlShutdown
-    get_handle_by_index = nvmlDeviceGetHandleByIndex
-    get_utilization_rates = nvmlDeviceGetUtilizationRates
+    init: Callable[[], None]
+    shutdown: Callable[[], None]
+    get_handle_by_index: Callable[[int], Any]
+    get_utilization_rates: Callable[[Any], Any]
+
+    @staticmethod
+    def default() -> 'GpuDependency':
+        d = GpuDependency()
+        d.init = nvmlInit
+        d.shutdown = nvmlShutdown
+        d.get_handle_by_index = nvmlDeviceGetHandleByIndex
+        d.get_utilization_rates = nvmlDeviceGetUtilizationRates
+        return d
 
 class Gpu:
     def __init__(self, dependency: GpuDependency, gpu_index: int = 0):
@@ -19,7 +29,10 @@ class Gpu:
         self._gpu_handle = dependency.get_handle_by_index(gpu_index)
 
     def __del__(self):
-        self._dependency.shutdown()
+        try:
+            self._dependency.shutdown()
+        except Exception:
+            pass
 
     def get_usage(self) -> float:
         try:

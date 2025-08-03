@@ -20,6 +20,7 @@ class Watcher:
         self._start_time = datetime.now()
         self._last_active = self._start_time
         self._last_heartbeat = self._start_time
+        self._test = None
 
     async def post(self, message: str):
         await self._dependency.post_message(message)
@@ -58,9 +59,10 @@ class Watcher:
                     break
                 elif left < timedelta(seconds=65):
                     await self.post(f'Shutdown in 1 minute..')
-                await asyncio.sleep(self._config.interval)
+                await asyncio.sleep(self._config.interval.total_seconds())
                 if self._test:
                     break
         except Exception as e:
             await self.post(f"Error: {e}")
+            raise
     
