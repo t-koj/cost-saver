@@ -60,7 +60,7 @@ def test_get_running_time_in_minutes(watcher):
 @pytest.mark.asyncio
 async def test_loop(watcher):
     watcher._config.app_url = "http://example.com"
-    watcher._config.interval = 0.1
+    watcher._config.interval = timedelta(seconds=0.1)
     watcher._config.span_threshold = timedelta(seconds=1)
     watcher._config.shutdown_interval = timedelta(seconds=1)
     
@@ -89,7 +89,7 @@ async def test_loop_shutdown(watcher):
 @pytest.mark.asyncio
 async def test_loop_shutdown_warning(watcher):
     watcher._config.app_url = "http://example.com"
-    watcher._config.interval = 0.1
+    watcher._config.interval = timedelta(seconds=0.1)
     watcher._config.span_threshold = timedelta(seconds=1)
     watcher._config.shutdown_interval = timedelta(seconds=1)
 
@@ -97,4 +97,5 @@ async def test_loop_shutdown_warning(watcher):
     watcher._dependency.gpu.get_usage.return_value = 0
     watcher._test = False
 
-    await watcher.loop()
+    with pytest.raises(Exception):
+        await watcher.loop()

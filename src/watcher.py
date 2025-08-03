@@ -33,6 +33,7 @@ class Watcher:
         return self._config.span_threshold - inactive_span
     
     async def _shutdown(self):
+        await self.post('Shutting down..')
         await self._dependency.system_agent.shutdown()
         await asyncio.sleep(self._config.shutdown_interval.total_seconds())
     

@@ -3,7 +3,6 @@ import os
 
 class SystemAgent:
     async def shutdown(self):
-        await self._post_message('Shutting down..')
         if os.name == 'nt':  # Windows
             os.system('shutdown /s /t 1')
         else:  # Linux and MacOS
