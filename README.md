@@ -50,7 +50,6 @@ python src/main.py
 | `TIME_THRESHOLD`     | 任意      | アイドル状態と判定するまでの時間（秒）        | 600            |
 | `HEARTBEAT_THRESHOLD`| 任意      | ハートビート通知の間隔（秒）                  | 1800           |
 | `INTERVAL`           | 任意      | GPU使用率の監視間隔（秒）                     | 10             |
-| `APP_URL`            | 任意      | アプリケーションのURL（利用する場合のみ）              | なし           |
 
 ## 注意事項
 

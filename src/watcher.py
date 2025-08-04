@@ -34,7 +34,7 @@ class Watcher:
     
     async def _shutdown(self):
         await self.post('Shutting down..')
-        await self._dependency.system_agent.shutdown()
+        self._dependency.system_agent.shutdown()
         await asyncio.sleep(self._config.shutdown_interval.total_seconds())
     
     async def _post_heartbeat_every_interval(self):
@@ -51,7 +51,6 @@ class Watcher:
 
     async def loop(self):
         try:
-            await self.post(f'{self._config.app_url}')
             while True:
                 await self._post_heartbeat_every_interval()
                 left = await self.time_left_to_shutdown()

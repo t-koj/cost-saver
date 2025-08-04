@@ -10,7 +10,7 @@ async def test_shutdown_windows(mock_os_system):
     agent._config.shutdown_interval.total_seconds.return_value = 0
 
     with patch("os.name", "nt"):
-        await agent.shutdown()
+        agent.shutdown()
 
     mock_os_system.assert_called_once_with('shutdown /s /t 1')
 
@@ -22,6 +22,6 @@ async def test_shutdown_unix(mock_os_system):
     agent._config.shutdown_interval.total_seconds.return_value = 0
 
     with patch("os.name", "posix"):
-        await agent.shutdown()
+        agent.shutdown()
 
     mock_os_system.assert_called_once_with('sudo shutdown now')
