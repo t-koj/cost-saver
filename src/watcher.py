@@ -35,7 +35,6 @@ class Watcher:
     async def _shutdown(self):
         await self.post('Shutting down..')
         self._dependency.system_agent.shutdown()
-        await asyncio.sleep(self._config.shutdown_interval.total_seconds())
     
     async def _post_heartbeat_every_interval(self):
         now = datetime.now()
@@ -56,10 +55,12 @@ class Watcher:
                 left = await self.time_left_to_shutdown()
                 if left < timedelta(seconds=0):
                     await self._shutdown()
-                    break
+                    await asyncio.sleep(self._config.shutdown_interval.total_seconds())
                 elif left < timedelta(seconds=65):
                     await self.post(f'Shutdown in 1 minute..')
-                await asyncio.sleep(self._config.interval.total_seconds())
+                    await asyncio.sleep(self._config.interval.total_seconds())
+                else:
+                    await asyncio.sleep(self._config.interval.total_seconds())
                 if self._test:
                     break
         except Exception as e:
