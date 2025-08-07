@@ -20,9 +20,13 @@ class Watcher:
         self._start_time = datetime.now()
         self._last_active = self._start_time
         self._last_heartbeat = self._start_time
+        self.last_message = ""
         self._test = None
 
     async def post(self, message: str):
+        if self.last_message == message:
+            return
+        self.last_message = message
         await self._dependency.post_message(message)
 
     async def time_left_to_shutdown(self) -> timedelta:
@@ -33,7 +37,6 @@ class Watcher:
         return self._config.span_threshold - inactive_span
     
     async def _shutdown(self):
-        await self.post('Shutting down..')
         self._dependency.system_agent.shutdown()
     
     async def _post_heartbeat_every_interval(self):
@@ -54,16 +57,15 @@ class Watcher:
                 await self._post_heartbeat_every_interval()
                 left = await self.time_left_to_shutdown()
                 if left < timedelta(seconds=0):
+                    await self.post('Shutting down..')
                     await self._shutdown()
-                    await asyncio.sleep(self._config.shutdown_interval.total_seconds())
                 elif left < timedelta(seconds=65):
                     await self.post(f'Shutdown in 1 minute..')
-                    await asyncio.sleep(self._config.interval.total_seconds())
-                else:
-                    await asyncio.sleep(self._config.interval.total_seconds())
+                elif left < timedelta(seconds=180):
+                    await self.post(f'Shutdown in 3 minutes..')
+                await asyncio.sleep(self._config.interval.total_seconds())
                 if self._test:
                     break
         except Exception as e:
             await self.post(f"Error: {e}")
             raise
-    

@@ -16,7 +16,7 @@ class Config:
             span_threshold=timedelta(minutes=10),
             heartbeat=timedelta(minutes=30),
             interval=timedelta(seconds=10),
-            shutdown_interval=timedelta(seconds=30),
+            shutdown_interval=timedelta(seconds=60),
         )
 
     def verify(self):
